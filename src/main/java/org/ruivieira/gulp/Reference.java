@@ -1,5 +1,11 @@
 package org.ruivieira.gulp;
 
+import org.reflections.ReflectionUtils;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Set;
+
 /**
  * @author Rui Vieira
  * @version 0.1
@@ -29,6 +35,25 @@ public class Reference {
 
     public static Reference createStaticMethod(String name, String classname, String methodname) {
         return new Reference(name, classname, methodname, ReferenceType.STATIC);
+    }
+
+    public static Reference createClass(String name, Class clazz) {
+        return new Reference(name, clazz.getName(), ReferenceType.CLASS);
+    }
+
+    public static Reference createStaticMethod(String name, Class clazz, String methodname) {
+
+        Set<Method> methods = ReflectionUtils.getMethods(clazz, ReflectionUtils.withModifier(Modifier.PUBLIC), ReflectionUtils.withModifier(Modifier.STATIC),
+                ReflectionUtils.withName(methodname));
+        if (methods.size() == 0) {
+            StringBuilder exceptionMsg = new StringBuilder();
+            exceptionMsg.append("There is no method with that name [");
+            exceptionMsg.append(clazz.getName()).append(".").append(methodname).append("]");
+            throw new RuntimeException(exceptionMsg.toString());
+        }
+
+        return new Reference(name, clazz.getName(), methodname, ReferenceType.STATIC);
+
     }
 
     public String getClassname() {
