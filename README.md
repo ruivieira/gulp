@@ -1,11 +1,10 @@
-gulp
-====
+# gulp
 
 gulp (because it's not SWIG), is a library to create wrappers for Java code to be used in R (via rJava).
 If you are in an early development stage, and constantly refactor your code it will avoid the need to manually update bindings in the rJava counterpart and be able to process them programatically (using your own `TemplateProcessor`s to generate the R wrapper.
 
-Installation
-============
+## Installation
+
 
 To install, simply run maven:
 
@@ -19,8 +18,8 @@ and add the dependency to your project:
         <version>1.0-SNAPSHOT</version>
     </dependency>
 
-Usage
-=====
+## Usage
+
 
 gulp provides annotations which can be used to flag references which you want to process and ultimately create a R script wrapping them for usage in rJava.
 
@@ -36,7 +35,7 @@ For instance, let us suppose we have a class `MyClass` we wish to export. We wri
     public class MyClass {
     
     }
-    
+
 If you want to export method bindings you can simply write:
 
     @R
@@ -50,11 +49,14 @@ If you want to export method bindings you can simply write:
             return "works!";
         }
     }
+
+Please not that, in terms of method references, currently **gulp** only supports static method ones.
+ However, given a class reference, an object can be instantiated and methods can be used from that object.
     
 As you can see, the `reference` value in the annotations refer to what the binding will be actually called in R.
-This way you can refactor code relentlessly witouth worrying about breaking the R calling code.
+This way you can refactor code relentlessly without worrying about breaking the R calling code.
 
-Once you have declared the reference entries you can process them simply by specifying the root pacakge to be scanned (the scan is performed recursively).
+Once you have declared the reference entries you can process them simply by specifying the root package to be scanned (the scan is performed recursively).
 
         AnnotationProcessor processor = new AnnotationProcessor("org.ruivieira.gulp");
         processor.process();
@@ -89,12 +91,14 @@ This will produce (using the previous annotated classes):
       		}
       	}
       
-      	testTwo <- J("org.ruivieira.gulp.test.AnotherClass.testTwo")
-      	myClass <- J("org.ruivieira.gulp.test.MyClass")
-      	testOne <- J("org.ruivieira.gulp.test.AnotherClass.testOne")
+      	return(list(
+      	    testTwo = J("org.ruivieira.gulp.test.AnotherClass")$testTwo,
+      	    myClass = J("org.ruivieira.gulp.test.MyClass"),
+      	    testOne = J("org.ruivieira.gulp.test.AnotherClass")$testOne
+      	))
       }
 
-Notes
-=====
+## Notes
+
 
 This is alpha stage, if you have any comments or suggestions, please leave them here!

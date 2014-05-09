@@ -19,7 +19,7 @@ public class AnnotationProcessor {
 
     private final String packageName;
 
-    private Set<Reference> referenceMap = new HashSet<>();
+    private Set<Reference> references = new HashSet<>();
 
     public AnnotationProcessor(final String packageName) {
         this.packageName = packageName;
@@ -35,23 +35,21 @@ public class AnnotationProcessor {
                 ExportClassReference exportClassReference = (ExportClassReference) clazz.getAnnotation(ExportClassReference.class);
                 String reference = exportClassReference.reference();
                 String classPath = clazz.getName();
-                System.out.println(classPath + " [" + reference + "] is annotated with @ExportClassReference");
-                referenceMap.add(Reference.create(reference, classPath));
+                references.add(Reference.createClass(reference, classPath));
             }
             Set<Method> getters = getAllMethods(clazz,
                     withModifier(Modifier.STATIC));
             for (Method method : getters) {
                 String reference = method.getAnnotation(ExportMethodReference.class).reference();
-                String classPath = method.getDeclaringClass().getName() + "." + method.getName();
-                referenceMap.add(Reference.create(reference, classPath));
-                System.out.println(classPath + " [" + reference + "]is annotated with @ExportMethodReference");
+                String classPath = method.getDeclaringClass().getName();
+                references.add(Reference.createStaticMethod(reference, classPath, method.getName()));
             }
         }
 
     }
 
-    public Set<Reference> getReferenceMap() {
-        return referenceMap;
+    public Set<Reference> getReferences() {
+        return references;
     }
 
 }

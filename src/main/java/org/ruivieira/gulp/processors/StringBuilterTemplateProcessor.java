@@ -1,8 +1,12 @@
 package org.ruivieira.gulp.processors;
 
+import org.apache.commons.lang.StringUtils;
 import org.ruivieira.gulp.Reference;
+import org.ruivieira.gulp.ReferenceType;
 import org.ruivieira.gulp.TemplateProcessor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -29,10 +33,24 @@ public class StringBuilterTemplateProcessor implements TemplateProcessor {
         builder.append("\t\t\t}\n");
         builder.append("\t\t}\n");
         builder.append("\t}\n\n");
+
+        builder.append("\treturn(list(\n");
+
+        List<String> referencesItems = new ArrayList<>();
         for (Reference reference : references) {
-            builder.append("\t")
-                    .append(reference.getName()).append(" <- J(\"").append(reference.getValue()).append("\")\n");
+            StringBuilder referenceItem = new StringBuilder();
+
+            referenceItem.append("\t\t").append(reference.getName()).append(" = J(\"").append(reference.getClassname());
+            if (reference.getType().equals(ReferenceType.CLASS)) {
+                referenceItem.append("\")");
+            } else if (reference.getType().equals(ReferenceType.STATIC)) {
+                referenceItem.append("\")$").append(reference.getMethodname());
+            }
+            referencesItems.add(referenceItem.toString());
         }
+        builder.append(StringUtils.join(referencesItems, ",\n"));
+        builder.append("\n\t))\n");
+
         builder.append("}");
         return builder.toString();
     }
