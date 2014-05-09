@@ -76,6 +76,7 @@ To get you started, there is a simple processor included which uses `StringBuild
 
 This will produce (using the previous annotated classes):
 
+      library(tools)
       library(rJava)
       
       init <- function(classpath=c()) {

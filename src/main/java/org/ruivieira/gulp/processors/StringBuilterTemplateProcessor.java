@@ -17,6 +17,7 @@ public class StringBuilterTemplateProcessor implements TemplateProcessor {
     @Override
     public String process(Set<Reference> references) {
         StringBuilder builder = new StringBuilder();
+        builder.append("library(tools)\n");
         builder.append("library(rJava)\n\n");
         builder.append("init <- function(classpath=c()) {\n");
         builder.append("\tif (!is.null(classpath)) {\n\n");
