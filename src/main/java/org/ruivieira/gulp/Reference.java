@@ -68,6 +68,15 @@ public class Reference {
         return name;
     }
 
+    public String getFormatedBinding() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("J('").append(getClassname()).append("')");
+        if (getType().equals(ReferenceType.STATIC)) {
+            builder.append("$").append(getMethodname());
+        }
+        return builder.toString();
+    }
+
     public ReferenceType getType() {
         return type;
     }

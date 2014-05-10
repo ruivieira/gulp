@@ -2,7 +2,6 @@ package org.ruivieira.gulp.processors;
 
 import org.apache.commons.lang.StringUtils;
 import org.ruivieira.gulp.Reference;
-import org.ruivieira.gulp.ReferenceType;
 import org.ruivieira.gulp.TemplateProcessor;
 
 import java.util.ArrayList;
@@ -41,12 +40,7 @@ public class StringBuilterTemplateProcessor implements TemplateProcessor {
         for (Reference reference : references) {
             StringBuilder referenceItem = new StringBuilder();
 
-            referenceItem.append("\t\t").append(reference.getName()).append(" = J(\"").append(reference.getClassname());
-            if (reference.getType().equals(ReferenceType.CLASS)) {
-                referenceItem.append("\")");
-            } else if (reference.getType().equals(ReferenceType.STATIC)) {
-                referenceItem.append("\")$").append(reference.getMethodname());
-            }
+            referenceItem.append("\t\t").append(reference.getName()).append(reference.getFormatedBinding());
             referencesItems.add(referenceItem.toString());
         }
         builder.append(StringUtils.join(referencesItems, ",\n"));
