@@ -40,9 +40,12 @@ public class AnnotationProcessor {
             Set<Method> getters = getAllMethods(clazz,
                     withModifier(Modifier.STATIC));
             for (Method method : getters) {
-                String reference = method.getAnnotation(ExportMethodReference.class).reference();
-                String classPath = method.getDeclaringClass().getName();
-                references.add(Reference.createStaticMethod(reference, classPath, method.getName()));
+                ExportMethodReference annotation = method.getAnnotation(ExportMethodReference.class);
+                if (annotation != null) {
+                    String reference = annotation.reference();
+                    String classPath = method.getDeclaringClass().getName();
+                    references.add(Reference.createStaticMethod(reference, classPath, method.getName()));
+                }
             }
         }
 
