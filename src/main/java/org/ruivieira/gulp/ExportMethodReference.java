@@ -11,4 +11,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ExportMethodReference {
     String reference();
+    String namespace() default "";
 }

@@ -14,4 +14,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ExportClassReference {
     String reference();
+    String namespace() default "";
 }

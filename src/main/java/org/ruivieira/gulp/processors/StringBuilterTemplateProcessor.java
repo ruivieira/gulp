@@ -40,7 +40,9 @@ public class StringBuilterTemplateProcessor implements TemplateProcessor {
         for (Reference reference : references) {
             StringBuilder referenceItem = new StringBuilder();
 
-            referenceItem.append("\t\t").append(reference.getName()).append(reference.getFormatedBinding());
+            referenceItem.append("\t\t").append(reference.getQualifiedName())
+                    .append("=")
+                    .append(reference.getFormatedBinding());
             referencesItems.add(referenceItem.toString());
         }
         builder.append(StringUtils.join(referencesItems, ",\n"));

@@ -15,7 +15,7 @@ and add the dependency to your project:
     <dependency>
         <groupId>gulp</groupId>
         <artifactId>gulp</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>0.1-SNAPSHOT</version>
     </dependency>
 
 ## Usage
@@ -71,7 +71,7 @@ As an example, you could pass them to FreeMarker and use your own template to ge
 To get you started, there is a simple processor included which uses `StringBuilder` to create a simple script:
 
         TemplateProcessor myProcessor = new StringBuilterTemplateProcessor();
-        String result = myProcessor.process(processor.getReferenceMap());
+        String result = myProcessor.process(processor.getReferences());
         System.out.println(result);
 
 This will produce (using the previous annotated classes):
@@ -101,6 +101,29 @@ This will produce (using the previous annotated classes):
       	    testOne = J("org.ruivieira.gulp.test.AnotherClass")$testOne
       	))
       }
+
+### Namespaces
+
+Organisation of bindings is possible using namespaces. To declare a namespace specify the (optional) parameter `namespace`
+in the export annotation.
+
+    @R
+    @ExportClassReference(reference = "myClass", namespace = "myNamespace")
+    public class MyClass {
+
+    }
+
+The namespaced binding can be accessed in the templates by using the method `reference.getQualifiedName` instead of
+`reference.getName()`. This result would be, after processing:
+
+      	return(list(
+      	    testTwo = J("org.ruivieira.gulp.test.AnotherClass")$testTwo,
+      	    myNamespace.myClass = J("org.ruivieira.gulp.test.MyClass"), # namespaced binding
+      	    testOne = J("org.ruivieira.gulp.test.AnotherClass")$testOne
+      	))
+      }
+
+The `getQualifiedName` is safe to use even when no namespace is used in the annotation as it will be ignored.
 
 ### Working with compiled classes
 

@@ -17,28 +17,42 @@ public class Reference {
     private final ReferenceType type;
     private String classname;
     private String methodname;
+    private String namespace;
 
-    private Reference(String name, String classname, ReferenceType type) {
-        this(name, classname, null, type);
+    private Reference(String namespace, String name, String classname, ReferenceType type) {
+        this(namespace, name, classname, null, type);
     }
 
-    private Reference(String name, String classname, String methodname, ReferenceType type) {
+    private Reference(String namespace, String name, String classname, String methodname, ReferenceType type) {
         this.name = name;
         this.classname = classname;
         this.methodname = methodname;
         this.type = type;
+        this.namespace = namespace;
     }
 
     public static Reference createClass(String name, String classname) {
-        return new Reference(name, classname, ReferenceType.CLASS);
+        return new Reference("", name, classname, ReferenceType.CLASS);
+    }
+
+    public static Reference createClass(String namespace, String name, String classname) {
+        return new Reference(namespace, name, classname, ReferenceType.CLASS);
     }
 
     public static Reference createStaticMethod(String name, String classname, String methodname) {
-        return new Reference(name, classname, methodname, ReferenceType.STATIC);
+        return new Reference("", name, classname, methodname, ReferenceType.STATIC);
+    }
+
+    public static Reference createStaticMethod(String namespace, String name, String classname, String methodname) {
+        return new Reference(namespace, name, classname, methodname, ReferenceType.STATIC);
     }
 
     public static Reference createClass(String name, Class clazz) {
-        return new Reference(name, clazz.getName(), ReferenceType.CLASS);
+        return new Reference("", name, clazz.getName(), ReferenceType.CLASS);
+    }
+
+    public static Reference createClass(String namespace, String name, Class clazz) {
+        return new Reference(namespace, name, clazz.getName(), ReferenceType.CLASS);
     }
 
     public static Reference createStaticMethod(String name, Class clazz, String methodname) {
@@ -66,6 +80,15 @@ public class Reference {
 
     public String getName() {
         return name;
+    }
+
+    public String getQualifiedName() {
+        final StringBuilder builder = new StringBuilder();
+        if (!namespace.equals("")) {
+            builder.append(namespace).append(".");
+        }
+        builder.append(name);
+        return builder.toString();
     }
 
     public String getFormatedBinding() {

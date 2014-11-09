@@ -25,7 +25,7 @@ public class AnnotationProcessor {
         this.packageName = packageName;
     }
 
-    public void process(String packageName) {
+    public void process() {
         Reflections reflections = new Reflections(packageName);
 
         Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(R.class);
@@ -34,8 +34,9 @@ public class AnnotationProcessor {
             if (clazz.getAnnotation(ExportClassReference.class) != null) {
                 ExportClassReference exportClassReference = (ExportClassReference) clazz.getAnnotation(ExportClassReference.class);
                 String reference = exportClassReference.reference();
+                String namespace = exportClassReference.namespace();
                 String classPath = clazz.getName();
-                references.add(Reference.createClass(reference, classPath));
+                references.add(Reference.createClass(namespace, reference, classPath));
             }
             Set<Method> getters = getAllMethods(clazz,
                     withModifier(Modifier.STATIC));
@@ -44,7 +45,8 @@ public class AnnotationProcessor {
                 if (annotation != null) {
                     String reference = annotation.reference();
                     String classPath = method.getDeclaringClass().getName();
-                    references.add(Reference.createStaticMethod(reference, classPath, method.getName()));
+                    String namespace = annotation.namespace();
+                    references.add(Reference.createStaticMethod(namespace, reference, classPath, method.getName()));
                 }
             }
         }
