@@ -34,6 +34,10 @@ public class AnnotationProcessor {
             if (clazz.getAnnotation(ExportClassReference.class) != null) {
                 ExportClassReference exportClassReference = (ExportClassReference) clazz.getAnnotation(ExportClassReference.class);
                 String reference = exportClassReference.reference();
+                // if we are dealing with a Scala class strip the '$'
+                if (reference.endsWith("$")) {
+                    reference = reference.substring(0, reference.length()-1);
+                }
                 String namespace = exportClassReference.namespace();
                 String classPath = clazz.getName();
                 references.add(Reference.createClass(namespace, reference, classPath));
